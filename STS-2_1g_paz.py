@@ -9,10 +9,11 @@ from numpy import pi as pi
 start = 0.
 stop = 500.
 step = 1.
-n = np.arange(start,stop,step)
-fn = (1/1000)*10**(n/96)
+n = np.arange(start,stop+step,step)
+fn = n*2
 wn=2*pi*fn
 wmix = -2*pi*29.8
+print (wmix)
 
 #zeros
 z0=-318.6 + 401.2j
@@ -36,8 +37,9 @@ gfit= multiplier*(numerator/denominator*(1j*wn-wmix))
 
 #plot
 plt.figure()
-plt.plot(fn, np.abs(gfit))
+#plt.plot(fn, np.abs(gfit))
 #plt.semilogx(fn, abs(gfit*ifit))
+plt.semilogx(fn, abs(gfit))
 plt.xlabel('Frequency [Hz]')
 plt.ylabel('Amplitude')
 #plt.xlim([0.2,100])

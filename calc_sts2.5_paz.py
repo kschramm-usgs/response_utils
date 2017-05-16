@@ -33,6 +33,7 @@ py=2*pi*100;
 #calculate the IF
 ifit=(px**2+2*hx*px*1j*wn-wn**2)*(py+1j*wn)/(py*px**2);
 
+gcoil = gfit/ifit
 
 #plot
 #h, f = paz_to_freq_resp(inst.poles, inst.zeros, scale_fac, 0.001, 2**26, freq=True)
@@ -41,6 +42,7 @@ plt.figure()
 #plt.subplot(121)
 plt.semilogx(fn, abs(gfit))
 plt.semilogx(fn, abs(gfit*ifit))
+plt.semilogx(fn, abs(gcoil))
 plt.xlabel('Frequency [Hz]')
 plt.ylabel('Amplitude')
 plt.xlim([0.2,100])
