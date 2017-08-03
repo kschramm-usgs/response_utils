@@ -32,17 +32,15 @@ zer2=[
 pol2=[
         -1.703608E-02+ 1.234000E-02j,
         -1.703608E-02+-1.234000E-02j,
-        -1.778991e-02,
-        -5.605308e-02,
+        -1.778991e-02+ 0.000000e-00j,
+        -5.605308e-02+ 0.000000e-00j,
         -3.918000E+01+ 4.912000E+01j,
         -3.918000E+01+-4.912000E+01j]  
 
 # this is from sensor test suite
 zer3=[
          0.000000E+00+ 0.000000E+00j,
-         0.000000E+00+ 0.000000E+00j,
-        -4.147725E-02+ 0.000000E+00j,
-        -4.147725E-02+ 0.000000E+00j]
+         0.000000E+00+ 0.000000E+00j]
 pol3=[
         -1.263000E-02+ 1.265000E-02j,
         -1.263000E-02+-1.265000E-02j,
@@ -52,36 +50,38 @@ pol3=[
 instName='CTAO_00'
 print("calculating info for a "+instName)
 
-inst = Response(desc=instName,units='Radians')
-inst.zeros = zer1
-inst.poles = pol1
+inst1 = Response(desc=instName,units='Radians')
+inst1.zeros = zer1
+inst1.poles = pol1
 norm_freq=0.02
 #norm_freq=1.0
-n1,f1 = inst.check_normalization(freq=norm_freq, nfft=2**24,t_sample=0.001)
+n1,f1 = inst1.check_normalization(freq=norm_freq, nfft=2**26,t_sample=0.001)
 scale_fac= 1.0/n1
 print ('The A0 norm factor is: '+str(scale_fac)+' for f='+str(norm_freq))
 #check the value
-inst.a0=1.0/n1
-A01=inst.a0
-n1,f1 = inst.check_normalization(freq=norm_freq, nfft=2**26,t_sample=0.001)
-print('This should be close to 1: '+str(1.0/n1))
-h1, f1 = paz_to_freq_resp(inst.poles, inst.zeros, scale_fac, 0.001, 2**26, freq=True)
+inst1.a0=1.0/n1
+A01=inst1.a0
+n,f = inst1.check_normalization(freq=norm_freq, nfft=2**26,t_sample=0.001)
+print('This should be close to 1: '+str(1.0/n))
+h1, f1 = paz_to_freq_resp(inst1.poles, inst1.zeros, scale_fac, 0.001, 2**26, freq=True)
+print(h1)
 
 # and now for the second resp....
-inst = Response(desc=instName,units='Radians')
-inst.zeros = zer3
-inst.poles = pol3
+inst2 = Response(desc=instName,units='Radians')
+inst2.zeros = zer2
+inst2.poles = pol2
 norm_freq=0.02
 #norm_freq=1.0
-n2,f2 = inst.check_normalization(freq=norm_freq, nfft=2**24,t_sample=0.001)
+n2,f2 = inst2.check_normalization(freq=norm_freq, nfft=2**24,t_sample=0.001)
 scale_fac= 1.0/n2
 print ('The A0 norm factor is: '+str(scale_fac)+' for f='+str(norm_freq))
 #check the value
-inst.a0=1.0/n2
-A02=inst.a0
-n2,f2 = inst.check_normalization(freq=norm_freq, nfft=2**26,t_sample=0.001)
-print('This should be close to 1: '+str(1.0/n2))
-h2, f2 = paz_to_freq_resp(inst.poles, inst.zeros, scale_fac, 0.001, 2**26, freq=True)
+inst2.a0=1.0/n2
+A02=inst2.a0
+n,f = inst2.check_normalization(freq=norm_freq, nfft=2**26,t_sample=0.001)
+print('This should be close to 1: '+str(1.0/n))
+h2, f2 = paz_to_freq_resp(inst2.poles, inst2.zeros, scale_fac, 0.001, 2**26, freq=True)
+print(h2)
 
 # and now for the third resp....
 inst = Response(desc=instName,units='Radians')
@@ -95,9 +95,10 @@ print ('The A0 norm factor is: '+str(scale_fac)+' for f='+str(norm_freq))
 #check the value
 inst.a0=1.0/n3
 A03=inst.a0
-n3,f3 = inst.check_normalization(freq=norm_freq, nfft=2**26,t_sample=0.001)
-print('This should be close to 1: '+str(1.0/n2))
+n,f = inst.check_normalization(freq=norm_freq, nfft=2**26,t_sample=0.001)
+print('This should be close to 1: '+str(1.0/n))
 h3, f3 = paz_to_freq_resp(inst.poles, inst.zeros, scale_fac, 0.001, 2**26, freq=True)
+print(h3)
 
 #plotting....
 plt.figure()
