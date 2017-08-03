@@ -44,8 +44,9 @@ zer3=[
 pol3=[
         -1.263000E-02+ 1.265000E-02j,
         -1.263000E-02+-1.265000E-02j,
-        -3.918000E+01+ 4.912000E+01j,
-        -3.918000E+01+-4.912000E+01j]  
+        -3.620107E+01+ 6.850121E+01j,
+        -3.620107E+01+-6.850121E+01j]
+
 
 instName='CTAO_00'
 print("calculating info for a "+instName)
@@ -53,8 +54,8 @@ print("calculating info for a "+instName)
 inst1 = Response(desc=instName,units='Radians')
 inst1.zeros = zer1
 inst1.poles = pol1
-norm_freq=0.02
-#norm_freq=1.0
+#norm_freq=0.02
+norm_freq=1.0
 n1,f1 = inst1.check_normalization(freq=norm_freq, nfft=2**26,t_sample=0.001)
 scale_fac= 1.0/n1
 print ('The A0 norm factor is: '+str(scale_fac)+' for f='+str(norm_freq))
@@ -70,8 +71,8 @@ print(h1)
 inst2 = Response(desc=instName,units='Radians')
 inst2.zeros = zer2
 inst2.poles = pol2
-norm_freq=0.02
-#norm_freq=1.0
+#norm_freq=0.02
+norm_freq=1.0
 n2,f2 = inst2.check_normalization(freq=norm_freq, nfft=2**24,t_sample=0.001)
 scale_fac= 1.0/n2
 print ('The A0 norm factor is: '+str(scale_fac)+' for f='+str(norm_freq))
@@ -87,30 +88,33 @@ print(h2)
 inst = Response(desc=instName,units='Radians')
 inst.zeros = zer3
 inst.poles = pol3
-norm_freq=0.02
-#norm_freq=1.0
+#norm_freq=0.02
+norm_freq=1.0
 n3,f3 = inst.check_normalization(freq=norm_freq, nfft=2**24,t_sample=0.001)
 scale_fac= 1.0/n3
 print ('The A0 norm factor is: '+str(scale_fac)+' for f='+str(norm_freq))
 #check the value
 inst.a0=1.0/n3
-A03=inst.a0
+A03=inst2.a0
 n,f = inst.check_normalization(freq=norm_freq, nfft=2**26,t_sample=0.001)
 print('This should be close to 1: '+str(1.0/n))
 h3, f3 = paz_to_freq_resp(inst.poles, inst.zeros, scale_fac, 0.001, 2**26, freq=True)
 print(h3)
 
 #plotting....
-plt.figure()
+plt.figure(1,figsize=(8,8))
 plt.subplot(121)
 #plt.loglog(f, abs(h))
 print('plotting amplitude')
-plt.semilogx(f1, abs(h1)/A01, label='metadata resp')
-plt.semilogx(f2, abs(h2)/A02, label='old method resp')
-plt.semilogx(f3, abs(h3)/A03, label='test suite resp')
+#plt.semilogx(1/f1,abs(h1)/A01, label='metadata resp')
+#plt.semilogx(1/f2,abs(h2)/A02, label='old method resp')
+#plt.semilogx(1/f3,abs(h3)/A03, label='test suite resp')
+plt.semilogx(1/f1,20*np.log10(abs(h1)/A01), label='metadata resp')
+plt.semilogx(1/f2,20*np.log10(abs(h2)/A02), label='old method resp')
+plt.semilogx(1/f3,20*np.log10(abs(h3)/A03), label='test suite resp')
 plt.legend()
-#plt.xlabel('Period [S]')
-plt.xlabel('Frequency [Hz]')
+plt.xlabel('Period [S]')
+#plt.xlabel('Frequency [Hz]')
 plt.ylabel('Amplitude')
 plt.xlim([0.0001,10000])
 #plt.xlim([40,800])
@@ -120,14 +124,14 @@ plt.subplot(122)
 # take negative of imaginary part
 print('plotting phase')
 phase = np.unwrap(np.arctan2(-h1.imag, h1.real))
-plt.semilogx(f1, phase, label='metadata resp')
+plt.semilogx(1/f1, phase, label='metadata resp')
 phase = np.unwrap(np.arctan2(-h2.imag, h2.real))
-plt.semilogx(f2, phase, label='old method resp')
+plt.semilogx(1/f2, phase, label='old method resp')
 phase = np.unwrap(np.arctan2(-h3.imag, h3.real))
-plt.semilogx(f3, phase, label='test suite resp')
+plt.semilogx(1/f3, phase, label='test suite resp')
 plt.legend()
-plt.xlabel('Frequency [Hz]')
-#plt.xlabel('Period [S]')
+#plt.xlabel('Frequency [Hz]')
+plt.xlabel('Period [S]')
 plt.ylabel('Phase [radian]')
 # title, centered above both subplots
 plt.suptitle('Response of '+instName +' Seismometer')
@@ -137,6 +141,6 @@ plt.xlim([0.0001,10000])
 plt.subplots_adjust(wspace=0.3)
 print('writing file')
 figName=instName + 'compareResp.jpg'
-plt.savefig(figName, format='jpg')
+plt.savefig(figName, format='JPEG',dpi=400)
 #plt.show()
 
