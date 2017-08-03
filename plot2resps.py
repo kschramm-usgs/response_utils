@@ -104,6 +104,7 @@ print(h3)
 #plotting....
 plt.figure(1,figsize=(8,8))
 plt.subplot(121)
+plt.ioff()
 #plt.loglog(f, abs(h))
 print('plotting amplitude')
 #plt.semilogx(1/f1,abs(h1)/A01, label='metadata resp')
@@ -141,6 +142,7 @@ plt.xlim([0.0001,10000])
 plt.subplots_adjust(wspace=0.3)
 print('writing file')
 figName=instName + 'compareResp.jpg'
+plt.draw()
 plt.savefig(figName, format='JPEG',dpi=400)
 #plt.show()
 
