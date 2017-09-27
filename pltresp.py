@@ -61,47 +61,33 @@ paz2={'zeros':[
       'gain': 1}  
 paz2['gain'] = 1./paz_2_amplitude_value_of_freq_resp(paz2, .1)
 
-# this is the nominal for an STS2.5 with the cal coil removed.
-paz4 = {'zeros':[
-                  0.000000e+00+ 0.000000e+00j,
-                  0.000000e+00+ 0.000000e+00j,
-                 -1.570800e+01+ 0.000000e+00j,
-                 -1.570800e+01+ 0.000000e+00j,
-                 -6.302030e+02+  0.000000e+00j],
-        'poles':[
-                 -3.702000e-02+ 3.702000e-02j,
-                 -3.702000e-02+-3.702000e-02j,
-                 -1.604100e+01+ 0.000000e+00j,
-                 -1.604100e+01+ 0.000000e+00j,
-                 -3.273540e+02+-7.414160e+01j,
-                 -3.273540e+02+ 7.414160e+01j,
-                 -9.738940e+02+ 0.000000e+00j],
-      'gain':1}  
-paz4['gain'] = 1./paz_2_amplitude_value_of_freq_resp(paz4, .1)
-
-
-# this is from sensor test suite, starting with an STS-2.5 nominal
+# this is from sensor test suite, starting with AAK resp 
 paz3 = {'zeros':[
-                  0.000000e+00+ 0.000000e+00j,
-                  0.000000e+00+ 0.000000e+00j,
-                 -2.373441e+01+ 0.000000e+00j,
-                 -2.373441e+01+ 0.000000e+00j,
-                 -6.302030e+02+ 0.000000e+00j],
+                0.00000E+00+  0.00000E+00j,
+                0.00000E+00+  0.00000E+00j,
+               -3.45984E+00+  0.00000E+00j,
+               -3.34238E+01+  0.00000E+00j,
+               -4.65364E+02+ -3.18375E+01j,
+               -4.65364E+02+  3.18375E+01j],
         'poles':[
-                 -3.702000e-02+ 3.702000e-02j,
-                 -3.702000e-02+-3.702000e-02j,
-                 -2.435126e+01+ 0.000000e+00j,
-                 -2.435126e+01+ 0.000000e+00j,
-                 -3.273540e+02+-7.414160e+01j,
-                 -3.273540e+02+ 7.414160e+01j,
-                 -9.738940e+02+ 0.000000e+00j],
+               -5.91568E-03+  5.86737E-03j, 
+               -5.91568E-03+ -5.86737E-03j,
+               -3.64739E+00+  0.00000E+00j,
+               -4.00447E+01+ -1.11554E+02j,
+               -4.00447E+01+  1.11554E+02j,
+               -5.16208E+01+  0.00000E+00j,
+               -6.129300+01+  0.00000E+00j,
+               -1.67590E+03+ -1.59951E+03j,
+               -1.67590E+03+  1.59951E+03j,
+               -2.11676E+03+  0.00000E+00j, 
+               -3.22515E+01+  0.00000E+00j],
        'gain':1}
 paz3['gain'] = 1./paz_2_amplitude_value_of_freq_resp(paz3, .1)
 
 h1,f1 = paz_to_freq_resp(paz1['poles'], paz1['zeros'], paz1['gain'], 1./200., 2**18, freq=True)
 h2,f2 = paz_to_freq_resp(paz2['poles'], paz2['zeros'], paz2['gain'], 1./200., 2**18, freq=True)
 h3,f3 = paz_to_freq_resp(paz3['poles'], paz3['zeros'], paz3['gain'], 1./200., 2**18, freq=True)
-h4,f4 = paz_to_freq_resp(paz4['poles'], paz4['zeros'], paz4['gain'], 1./200., 2**18, freq=True)
+#h4,f4 = paz_to_freq_resp(paz4['poles'], paz4['zeros'], paz4['gain'], 1./200., 2**18, freq=True)
 #plotting....
 plt.figure(1, figsize=(8,8))
 plt.subplots_adjust(hspace=0.001)
@@ -110,7 +96,7 @@ plt.subplot(211)
 print('plotting amplitude')
 plt.semilogx(f1, 20*np.log10(h1), label='IDA starting resp', linewidth=6.0, alpha=0.35)
 plt.semilogx(f2, 20*np.log10(h2), label='IDA method resp')
-plt.semilogx(f4, 20*np.log10(h4), label='STS 2.5 no coil', linewidth=6.0, alpha=0.35)
+#plt.semilogx(f4, 20*np.log10(h4), label='STS 2.5 no coil', linewidth=6.0, alpha=0.35)
 plt.semilogx(f3, 20*np.log10(h3), label='test suite resp')
 plt.legend()
 plt.ylabel('Amplitude')
@@ -129,8 +115,8 @@ phase = np.unwrap(np.arctan2(-h1.imag, h1.real))
 plt.semilogx(f1, phase, label='IDA starting resp', linewidth=6.0, alpha=0.35)
 phase = np.unwrap(np.arctan2(-h2.imag, h2.real))
 plt.semilogx(f2, phase, label='IDA method resp')
-phase = np.unwrap(np.arctan2(-h4.imag, h4.real))
-plt.semilogx(f4, phase, label='STS 2.5 no coil', linewidth=6.0, alpha=0.35)
+#phase = np.unwrap(np.arctan2(-h4.imag, h4.real))
+#plt.semilogx(f4, phase, label='STS 2.5 no coil', linewidth=6.0, alpha=0.35)
 phase = np.unwrap(np.arctan2(-h3.imag, h3.real))
 plt.semilogx(f3, phase, label='test suite resp')
 plt.legend()
